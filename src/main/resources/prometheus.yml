@@ -12,14 +12,7 @@ scrape_configs:
       - names: ["advisor"]
         type: A
         port: 8080
-  - job_name: "cision_press_release"
+  - job_name: "press_release"
     metrics_path: "/actuator/prometheus"
     static_configs:
       - targets: ["192.168.96.6:8081"]
-  #- job_name: "prometheus"
-    #dns_sd_configs:
-    #  - names: ["prometheus"]
-    #    type: A
-    #    port: 9090
-    #static_configs:
-    #  - targets: ["prometheus:9090"]

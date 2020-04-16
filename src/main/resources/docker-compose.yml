@@ -86,17 +86,9 @@ services:
     hostname: grafana
     ports:
       - 3000:3000
-    #environment:
-      #- GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s:%(http_port)s/grafana/
-      #- GF_SECURITY_ADMIN_USER=${USER:-admin}
-      #- GF_SECURITY_ADMIN_PASSWORD=${PASS:-admin}
-    #user: "472"
     user: "104"
     volumes:
       - grafana_data:/var/lib/grafana
-      #- ./grafana/provisioning/:/etc/grafana/provisioning/
-    #env_file:
-      #- ./grafana/config.monitoring
   instana:
     image: instana/agent
     container_name: instana
@@ -120,7 +112,7 @@ services:
       - INSTANA_AGENT_ENDPOINT_PORT=443
       - INSTANA_AGENT_KEY=_qHudaLIRKWsG6lTDJdrcA
       - INSTANA_AGENT_ZONE=''
-  cision_press_release:
+  press_release:
     image: openjdk:13-alpine
     depends_on:
       - node_exporter
@@ -128,11 +120,11 @@ services:
       - prometheus
       - grafana
       - instana
-    container_name: cision_press_release
+    container_name: press_release
     networks:
       back-tier:
         ipv4_address: 192.168.96.6
-    hostname: cision_press_release
+    hostname: press_release
     volumes:
       - ../docker:/usr/local/share/hml
     ports:

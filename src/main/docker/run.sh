@@ -24,6 +24,6 @@ while ! $(nc -z grafana  $GRAFANA_PORT); do sleep 3; done
 echo "******* The Grafana service has started"
 
 echo "********************************************************"
-echo "Starting the Cision Press Release service on $SERVER_PORT"
+echo "Starting the Press Release service on $SERVER_PORT"
 echo "********************************************************"
 java -Dserver.port=$SERVER_PORT -jar /usr/local/share/hml/metric-scraper.jar
