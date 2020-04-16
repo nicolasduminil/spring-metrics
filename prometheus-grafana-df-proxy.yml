@@ -1,0 +1,65 @@
+version: "3"
+
+services:
+
+  node-exporter:
+    image: basi/node-exporter:v0.1.1
+    networks:
+      - default
+    volumes:
+      - /proc:/host/proc
+      - /sys:/host/sys
+      - /:/rootfs
+      - /etc/hostname:/etc/host_hostname
+    environment:
+      - HOST_HOSTNAME=/etc/host_hostname
+    command: '-collector.procfs /host/proc -collector.sysfs /host/sys -collector.filesystem.ignored-mount-points "^/(sys|proc|dev|host|etc)($$|/)" -collector.textfile.directory /etc/node-exporter/ -collectors.enabled="conntrack,diskstats,entropy,filefd,filesystem,loadavg,mdadm,meminfo,netdev,netstat,stat,textfile,time,vmstat,ipvs"'
+    deploy:
+      mode: global
+
+
+  cadvisor:
+    image: google/cadvisor:v0.24.1
+    networks:
+      - default
+    volumes:
+      - /:/rootfs
+      - /var/run:/var/run
+      - /sys:/sys
+      - /var/lib/docker:/var/lib/docker
+    deploy:
+      mode: global
+
+  prometheus:
+    image: vfarcic/prometheus-devops21
+    networks:
+      - default
+    ports:
+      - 9091:9090
+
+  grafana:
+    image: grafana/grafana:${GRAFANA_TAG:-4.5.2}
+    networks:
+      - default
+      - logging_default
+      - proxy
+    environment:
+      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s:%(http_port)s/grafana/
+      - GF_SECURITY_ADMIN_USER=${USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${PASS:-admin}
+    deploy:
+      labels:
+        - com.df.notify=true
+        - com.df.distribute=true
+        - com.df.servicePath=/grafana/,/grafana/public,/grafana/api
+        - com.df.reqPathSearch=/grafana/
+        - com.df.reqPathReplace=/
+        - com.df.port=3000
+
+networks:
+  default:
+    external: false
+  logging_default:
+    external: true
+  proxy:
+    external: true

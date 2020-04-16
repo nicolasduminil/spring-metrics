@@ -1,0 +1,38 @@
+cat <<EOF >create-stack.yml
+version: "3"
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - ${network}
+    deploy:
+      replicas: 2
+  tomcat:
+    image: tomcat:8.0-jre8
+    ports:
+      - "8080:8080"
+    networks:
+      - ${network}
+    deploy:
+      replicas: 1
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: 'db'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - '3306:3306'
+    networks:
+      - ${network}
+    deploy:
+      replicas: 1
+networks:
+  ${network}:
+    external: true
+
+EOF

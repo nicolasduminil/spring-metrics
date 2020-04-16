@@ -1,0 +1,1 @@
+./create-swarm-cluster.sh --name monitor --number 3 --label instana

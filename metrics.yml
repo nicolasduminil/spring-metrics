@@ -1,0 +1,8 @@
+global:
+  scrape_interval:     5s
+  evaluation_interval: 5s
+scrape_configs:
+  - job_name: "scraper-app"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["192.168.2.123:8081"]
